@@ -1,0 +1,17 @@
+{
+    "server_urls": {
+        "1": "https://api.yl777.win"
+    },
+    "website_urls": {
+        "0": "https://spf-mobile7-stg.sevenone.online"
+    },
+    "database": {
+        "user": "walker.ho",
+        "password": "BZ7yslghwWT52XqY9CdyMGw5n21rMH",
+        "host": "spdb-cluster.cluster-cow6dmdbfn9e.ap-northeast-1.rds.amazonaws.com",
+        "port": "3306",
+        "db_name": "dev_gamecoins"
+    },
+    "SLOTADMIN_PUBLIC_KEY":"-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA59qvpPHVgMbl8U3rIpqg\n02UH4nDx1PvKFRgOIB6ANcKQEnbS1xtnyy2i3oaN2G6MB9X1kzEp4aYz3/HpkCzE\nw0RgPU1zFPjecnET5EGMFI83aBRaI+SS8isrhL8LxlLwc1JbzOdJMU1ukv/SXXw3\nstYIy4W2XiayCmg5FHUncxBvSRqXDfM2Czv69nFaknX0pqeBOAQxPAB5xP44SBjN\nVcT0A5+6E/xmravH1TFttOpFkHxg7sHA72xbsDn1oozUHMhgEJ1/wGSZ1bSu231C\nACzIy4o+kpBVMP8Tzd4e6ldDG8RNydiv60uXqEa/iyVYVsSG6DnkSE4uqc6RrLHj\nWQIDAQAB\n-----END PUBLIC KEY-----"
+ 
+}
