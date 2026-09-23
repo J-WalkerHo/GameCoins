@@ -8,11 +8,12 @@ from accounts.models import SiteSettings
 from routers.admin_auth import admin_auth  # 引入後台驗證器
 from schemas import NoticeSettingOutSchema, UpdateNoticeInSchema, SiteConfigOutSchema, UpdateSiteConfigInSchema
 
-router = Router(tags=["後台-網站設定"], auth=admin_auth)
+admin_router = Router(tags=["後台-網站設定"], auth=admin_auth)
+public_router = Router(tags=["前台-公開資料"])
 
 TW_TZ = timezone(timedelta(hours=8))
 
-@router.get("/notice", response=NoticeSettingOutSchema, auth=admin_auth)
+@admin_router.get("/notice", response=NoticeSettingOutSchema, auth=admin_auth)
 def get_notice_setting(request):
 
     settings, _ = SiteSettings.objects.get_or_create(id=1)
@@ -23,7 +24,7 @@ def get_notice_setting(request):
         "last_edited_time":  settings.last_edited_time.astimezone(TW_TZ).strftime("%Y-%m-%d %H:%M:%S") if settings.last_edited_time else None
     }
 
-@router.put("/notice", response=NoticeSettingOutSchema, auth=admin_auth)
+@admin_router.put("/notice", response=NoticeSettingOutSchema, auth=admin_auth)
 def update_notice_setting(request, payload: UpdateNoticeInSchema):
     setting, _ = SiteSettings.objects.get_or_create(id=1)
 
@@ -42,7 +43,7 @@ def update_notice_setting(request, payload: UpdateNoticeInSchema):
         "last_edited_time": tw_time.strftime("%Y-%m-%d %H:%M:%S")
     }
 
-@router.get("public/notice", auth=None)
+@public_router.get("/notice")
 def get_public_notice(request):
     settings = SiteSettings.objects.first()
     if settings and settings.is_notice_enabled:
@@ -54,7 +55,7 @@ def get_public_notice(request):
         "enabled": False, "notice": ""
     }
 
-@router.get("/config", response=SiteConfigOutSchema, auth=admin_auth)
+@admin_router.get("/config", response=SiteConfigOutSchema, auth=admin_auth)
 def get_site_confing(request):
     settings, _ = SiteSettings.objects.get_or_create(id=1)
     return{
@@ -69,7 +70,7 @@ def get_site_confing(request):
         "company_line": settings.company_line or ""
     }
 
-@router.put("/config", response=SiteConfigOutSchema, auth=admin_auth)
+@admin_router.put("/config", response=SiteConfigOutSchema, auth=admin_auth)
 def update_site_config(request, payload: UpdateSiteConfigInSchema):
     setting, _ = SiteSettings.objects.get_or_create(id=1)
     

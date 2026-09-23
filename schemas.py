@@ -84,3 +84,28 @@ class UpdateSiteConfigInSchema(Schema):
     company_phone: str
     company_mail: str
     company_line: str
+
+class BannerOutSchema(Schema):
+    id: int
+    pc_banner_img: str
+    mobile_banner_img: str
+    banner_link: Optional[str] = None
+    # title: Optional[str] = None
+    # sort_order: int
+    # is_active: bool
+
+class CreateBannerInSchema(Schema):
+    pc_banner_img: str
+    mobile_banner_img: str
+    banner_link: Optional[str] = None
+    # title: Optional[str] = None
+    # sort_order: int = 0
+    # is_active: bool = True
+
+class UpdateBannerInSchema(Schema):
+    pc_banner_img: Optional[str] = None
+    mobile_banner_img: Optional[str] = None
+    banner_link: Optional[str] = None
+    # title: Optional[str] = None
+    # sort_order: Optional[int] = None
+    # is_active: Optional[bool] = None
