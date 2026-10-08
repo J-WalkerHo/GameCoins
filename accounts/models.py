@@ -18,12 +18,12 @@ class Client(models.Model):
     password = models.CharField(max_length=128, verbose_name="密碼")
     name = models.CharField(max_length=50, verbose_name="會員名稱")
     id_code = models.CharField(max_length=10, unique=True, verbose_name="身分證字號")
-    id_verified = models.BooleanField(default=True, verbose_name="身分證是否驗證完成")
+    id_verified = models.BooleanField(default=False, verbose_name="身分證是否驗證完成")
     phonenumber = models.CharField(max_length=15, unique=True, verbose_name="手機號碼")
     email = models.EmailField(unique=True, verbose_name="電子郵件")
     registered_at = models.DateTimeField(auto_now_add=True, verbose_name="註冊時間")
     is_active = models.BooleanField(default=True, verbose_name="是否啟用")
-    is_tradable = models.BooleanField(default=True, verbose_name="是否可交易")
+    is_tradable = models.BooleanField(default=False, verbose_name="是否可交易")
 
     idcard_front_img = models.ImageField(upload_to='idcard_front/', null=True, blank=True, verbose_name="身分證正面照片")
     idcard_back_img = models.ImageField(upload_to='idcard_back/', null=True, blank=True, verbose_name="身分證背面照片")
@@ -70,28 +70,42 @@ class SiteSettings(models.Model):
     last_editor = models.CharField(max_length=50, blank=True, null=True, verbose_name="最後編輯管理者")
     last_edited_time = models.DateTimeField(auto_now=True, verbose_name="最後編輯時間")
 
+class CashFlowConfig(models.Model):
+    active_supplier = models.CharField(max_length=50, default="歐付寶", verbose_name="目前啟用的金流廠商")
+
+    class Meta:
+        verbose_name = "全站金流選擇"
+
 class CashFlowSettings(models.Model):
     ENVIRONMENT_CHOICES = [('test', '測試環境'), ('prod', '正式環境')]
 
-    type = models.CharField(max_length=10, choices=ENVIRONMENT_CHOICES, default='test')
-    cashflow_supplier = models.CharField(max_length=50, verbose_name="金流廠商名稱(如:綠界/藍新)")
-    merchant_id = models.CharField(max_length=100, verbose_name="商店代號 MerchantID")
-    hash_key = models.CharField(max_length=100)
-    hash_iv = models.CharField(max_length=100)
+    supplier_name = models.CharField(max_length=50, unique=True, verbose_name="廠商名稱(如: 歐付寶, GSPay)")
+    env_type = models.CharField(max_length=10, choices=ENVIRONMENT_CHOICES, default='test')
+    merchant_id = models.CharField(max_length=100, blank=True, null=True, verbose_name="Merchant ID")
+    hash_key = models.CharField(max_length=100, blank=True, null=True, verbose_name="Hash Key")
+    hash_iv = models.CharField(max_length=100, blank=True, null=True, verbose_name="Hash IV")
 
-    shop_payment = models.BooleanField(default=True, verbose_name="開啟超商支付")
-    virtual_payment = models.BooleanField(default=True, verbose_name="開啟虛擬帳號")
-    creditcard_payment = models.BooleanField(default=True, verbose_name="開啟信用卡")
+    # 通道開關
+    has_store_pay = models.BooleanField(default=True, verbose_name="有超商代碼通道")
+    has_virtual_pay = models.BooleanField(default=True, verbose_name="有虛擬帳號通道")
+    has_credit_pay = models.BooleanField(default=False, verbose_name="有信用卡通道")
+    has_withdrawal = models.BooleanField(default=False, verbose_name="有出款服務")
 
-    # 服務費與手續費設定
-    withdrawal_status = models.BooleanField(default=False, verbose_name="是否有出款服務費")
-    service_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="服務費定額")
-    fee_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="服務費比率(%)")
-    max_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    min_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    
-    withdrawal_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="出款服務費定額")
-    withdrawal_fee_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="出款服務費比率(%)")
+    # 收款服務費
+    service_fee_fixed = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="收款服務費(定額)")
+    service_fee_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="收款服務費(%數)")
+    service_fee_max = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="收款服務費最高金額")
+    service_fee_min = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="收款服務費最低金額")
+
+    # 出款服務費
+    withdrawal_fee_fixed = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="出款服務費(定額)")
+    withdrawal_fee_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="出款服務費(%數)")
+
+    class Meta:
+        verbose_name = "金流廠商參數設定"
+
+    def __str__(self):
+        return f"{self.supplier_name} ({self.get_env_type_display()})"
 
 class Banner(models.Model):
     pc_banner_img = models.CharField(max_length=255, verbose_name="PC Banner 圖址")

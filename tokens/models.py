@@ -10,18 +10,19 @@ class Product(models.Model):
     ]
 
     img_link = models.CharField(max_length=255, verbose_name="商品圖片來源")
-    name = models.CharField(max_length=100, verbose_name="商品名稱(如: 新楓之檎幣)")
+    name = models.CharField(max_length=100, verbose_name="商品名稱")
     trade_type = models.CharField(max_length=10, choices=TRADE_TYPE_CHOICES, default='sell', verbose_name="交易類型")
+    game_type = models.CharField(max_length=20, null=True, blank=True, verbose_name="遊戲類型")
     
     # 1 台幣 = 多少遊戲幣，例如 比值 1000 表示 1 TWD = 1000 遊戲幣
     ratio = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="兌換比值")
     
     is_active = models.BooleanField(default=True, verbose_name="是否上架")
-    is_exclusive = models.BooleanField(default=False, verbose_name="是否專屬商品")
-    exclusive_client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="指定專屬會員")
     is_soldout = models.BooleanField(default=False, verbose_name="是否售完")
-    
+
+    exclusive_client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="指定專屬會員")
     single_digits_allowed = models.BooleanField(default=False, verbose_name="是否可下單個位數金額")
+
     moq = models.DecimalField(max_digits=10, decimal_places=2, default=100, verbose_name="最小下單金額(MOQ)")
     max_oq = models.DecimalField(max_digits=10, decimal_places=2, default=10000, verbose_name="最大下單金額(MaxOQ)")
 
@@ -40,9 +41,16 @@ class Order(models.Model):
         ('failed', '交易失敗/退款'),
     ]
 
+    TRADE_TYPE_CHOICES = [
+        ('sell', '出售(玩家買幣)'),
+        ('buy', '收購(玩家賣幣)'),
+    ]
+
     order_id = models.CharField(max_length=50, unique=True, verbose_name="訂單編號")
     client = models.ForeignKey(Client, on_delete=models.PROTECT, verbose_name="關聯會員")
     product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="購買商品")
+
+    trade_type = models.CharField(max_length=10, choices=TRADE_TYPE_CHOICES, default='sell', verbose_name="交易類型")
     
     order_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="訂單狀態")
     order_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="訂單金額(TWD)")

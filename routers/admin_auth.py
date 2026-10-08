@@ -1,4 +1,4 @@
-from ninja import Router
+from ninja import Router, Form
 from ninja.errors import HttpError
 from django.contrib.auth import authenticate
 from ninja_jwt.tokens import RefreshToken
@@ -24,13 +24,13 @@ class AdminJWTAuth(JWTAuth):
 admin_auth = AdminJWTAuth()
 
 @router.post("/login", response=TokenOutSchema, auth=None)
-def login(request, payload: LoginInSchema):
+def login(request, username: str = Form(...), password: str = Form(...)):
     """
     管理員 / 使用者登入取得 JWT Token
     (在 Swagger UI 上可直接輸入 username 與 password 進行測試)
     """
     # 驗證帳號密碼
-    user = authenticate(username=payload.username, password=payload.password)
+    user = authenticate(username=username, password=password)
     
     if not user:
         raise HttpError(401, "帳號或密碼錯誤")

@@ -8,8 +8,10 @@ from routers.admin_site_settings import public_router as site_settings_router_pu
 from routers.admin_img import router as pictures_router  # 引入後台圖片上傳的路由
 from routers.admin_banner import admin_router as admin_banner
 from routers.admin_banner import public_router as public_banner
-
-
+from routers.admin_cashflow import router as cashflow_admin_router
+from routers.admin_product import admin_product_router, public_product_router
+from routers.admin_clients import router as admin_clients_router
+from routers.client_auth_profile import public_client_router, client_profile_router
 
 api = NinjaAPI(
     title="遊戲幣平台 API", 
@@ -23,6 +25,14 @@ api.add_router("/public", site_settings_router_public)  # 將後台網站設定�
 api.add_router("/admin", pictures_router)  # 將後台圖片上傳的路由加入 API
 api.add_router("/admin", admin_banner)  # 將後台網站設定的路由加入 API
 api.add_router("/public", public_banner)  # 將後台網站設定的路由加入 API
+api.add_router("/admin/cashflow", cashflow_admin_router)
+api.add_router("/admin", admin_product_router)
+api.add_router("/public", public_product_router)
+api.add_router("/admin/clients", admin_clients_router)
+api.add_router("/public/clients", public_client_router)
+api.add_router("/clients/profile", client_profile_router)
+
+
 
 # api.register_controllers(NinjaJWTDefaultController)
 
