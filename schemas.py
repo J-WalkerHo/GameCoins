@@ -273,3 +273,40 @@ class AddBankAccountInSchema(Schema):
     bank_name: str
     account_number: str
     account_holder_name: str
+
+class OrderClientOutSchema(Schema):
+    id: int
+    account: str
+    name: str
+    phonenumber: Optional[str] = None
+
+class OrderProductOutSchema(Schema):
+    id: int
+    name: str
+
+class OrderDetailOutSchema(Schema):
+    id: int
+    order_id: str
+    client: OrderClientOutSchema
+    product: Optional[OrderProductOutSchema] = None
+    trade_type: str
+    order_status: str
+    order_price: float
+    game_coins: float
+
+    payment_info: Optional[str] = None
+    payment_source: Optional[str] = None
+
+    game_id: str
+    game_account: str
+
+    created_time: str
+    paid_time: Optional[str] = None
+    transfered_time: Optional[str] = None
+
+class OrderListResponseSchema(Schema):
+    items: List[OrderDetailOutSchema]
+    total_count: int
+
+class UpdateOrderStatusInSchema(Schema):
+    order_status: str                   # pending / paid / transfered / completed / cancelled / failed

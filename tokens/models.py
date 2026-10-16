@@ -68,5 +68,10 @@ class Order(models.Model):
     paid_time = models.DateTimeField(null=True, blank=True, verbose_name="繳費時間")
     transfered_time = models.DateTimeField(null=True, blank=True, verbose_name="移轉/交貨時間")
 
+    class Meta:
+        verbose_name = "交易訂單"
+        verbose_name_plural = verbose_name
+        ordering = ['-id']
+
     def __str__(self):
         return f"訂單 {self.order_id} - {self.client.name}"
