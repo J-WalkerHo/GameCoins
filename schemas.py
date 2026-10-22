@@ -310,3 +310,35 @@ class OrderListResponseSchema(Schema):
 
 class UpdateOrderStatusInSchema(Schema):
     order_status: str                   # pending / paid / transfered / completed / cancelled / failed
+
+class CreateOrderInSchema(Schema):
+    client_id: int
+    product_id: int
+    order_price: int
+    game_id: str
+    game_account: str
+    payment_source: Optional[str] = '超商代碼' # 預設為超商代碼
+
+class ClientProductOutSchema(Schema):
+    id: int
+    name: str
+
+class ClientOrderDetailOutSchema(Schema):
+    id: int
+    order_id: int
+    product: Optional[ClientProductOutSchema] = None
+    trade_type: str
+    order_status: str
+    order_price: int
+    game_coins: int
+    payment_info: Optional[str] = ""
+    payment_source: Optional[str] = ""
+    game_id: str
+    game_account: str
+    created_time: str
+    paid_time: Optional[str] = None
+    transfered_time: Optional[str] = None
+
+class ClientOrderListResponseSchema(Schema):
+    items: List[ClientOrderDetailOutSchema]
+    total_count: int

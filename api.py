@@ -12,6 +12,8 @@ from routers.admin_cashflow import router as cashflow_admin_router
 from routers.admin_product import admin_product_router, public_product_router
 from routers.admin_clients import router as admin_clients_router
 from routers.client_auth_profile import public_client_router, client_profile_router
+from routers.admin_order import router as admin_order_router
+from routers.client_orders import router as client_orders_router
 
 api = NinjaAPI(
     title="遊戲幣平台 API", 
@@ -31,7 +33,8 @@ api.add_router("/public", public_product_router)
 api.add_router("/admin/clients", admin_clients_router)
 api.add_router("/public/clients", public_client_router)
 api.add_router("/clients/profile", client_profile_router)
-
+api.add_router("/admin/orders", admin_order_router)
+api.add_router("/client", client_orders_router)
 
 
 # api.register_controllers(NinjaJWTDefaultController)

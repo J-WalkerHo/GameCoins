@@ -23,6 +23,7 @@ class Product(models.Model):
     exclusive_client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="指定專屬會員")
     single_digits_allowed = models.BooleanField(default=False, verbose_name="是否可下單個位數金額")
 
+    fee = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="服務費")
     moq = models.DecimalField(max_digits=10, decimal_places=2, default=100, verbose_name="最小下單金額(MOQ)")
     max_oq = models.DecimalField(max_digits=10, decimal_places=2, default=10000, verbose_name="最大下單金額(MaxOQ)")
 
